@@ -6,8 +6,8 @@ use pyo3::{pymodule, types::PyModule, PyErr, PyResult, Python};
 #[pymodule]
 fn unique_with_tol(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
     #[pyfn(m)]
-    #[pyo3(name = "_unique_with_tol")]
-    fn unique_with_tol<'py>(
+    #[pyo3(name = "indices_unique_with_tol")]
+    fn indices_unique_with_tol<'py>(
         py: Python<'py>,
         a: PyReadonlyArray2<'_, f64>,
         tol: f64,
@@ -15,7 +15,7 @@ fn unique_with_tol(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
         let a = a.as_array();
         // let a: Vec<ArrayView1<f64>> = a.axis_iter(Axis(0)).collect();
 
-        let mut inverses: Vec<i32> = vec![-1; a.len()];
+        let mut inverses: Vec<i32> = vec![-1; a.nrows()];
         let mut index = 0;
 
         loop {
@@ -25,7 +25,7 @@ fn unique_with_tol(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
                 None => break,
             };
 
-            for j in 0..a.len() {
+            for j in 0..a.nrows() {
                 let distance = a
                     .row(i)
                     .iter()
